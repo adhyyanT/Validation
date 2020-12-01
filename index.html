@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Validator</title>
+  </head>
+  <body>
+    Output:
+    <textarea
+      name="visChangeText"
+      id="visChangeText"
+      cols="30"
+      rows="20"
+    ></textarea>
+
+    <script type="text/javascript">
+      function getHiddenProp() {
+        var prefixes = ['webkit', 'moz', 'ms', 'o'];
+
+        // if 'hidden' is natively supported just return it
+        if ('hidden' in document) return 'hidden';
+
+        // otherwise loop over all the known prefixes until we find one
+        for (var i = 0; i < prefixes.length; i++) {
+          if (prefixes[i] + 'Hidden' in document) return prefixes[i] + 'Hidden';
+        }
+
+        // otherwise it's not supported
+        return null;
+      }
+      function isHidden() {
+        var prop = getHiddenProp();
+        if (!prop) return false;
+
+        return document[prop];
+      }
+      var visProp = getHiddenProp();
+      if (visProp) {
+        var evtname = visProp.replace(/[H|h]idden/, '') + 'visibilitychange';
+        document.addEventListener(evtname, visChange);
+      }
+
+      function visChange() {
+        var txtFld = document.getElementById('visChangeText');
+
+        if (txtFld) {
+          if (isHidden()) txtFld.value += 'Tab Hidden!\n';
+          else txtFld.value += 'Tab Visible!\n';
+        }
+      }
+    </script>
+  </body>
+</html>
